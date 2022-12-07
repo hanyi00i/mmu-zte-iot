@@ -5,7 +5,7 @@ const BUS = require("./bus");
 const BUS_STOP = require("./bus_stop");
 
 MongoClient.connect(
-	"mongodb+srv://Group13:p%4055w0rd@cluster0.ft7ws.mongodb.net/vms?retryWrites=true&w=majority",
+	"mongodb+srv://bolehland:<password>@cluster0.w5dfdjn.mongodb.net/?retryWrites=true&w=majority",
 	{ useNewUrlParser: true },
 ).catch(err => {
 	console.error(err.stack)
