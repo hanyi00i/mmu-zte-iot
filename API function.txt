@@ -10,8 +10,8 @@ updateRoute&ETA
 user
 register
 login
-
-
+busBooking
+checkHistory
 
 commuter
 createCommuter
