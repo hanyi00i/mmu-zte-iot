@@ -38,4 +38,3 @@ class Bus {
 }
 
 module.exports = Bus;
-
