@@ -1,24 +1,20 @@
 const MongoClient = require("mongodb").MongoClient;
-const { Navigator } = require("node-navigator");
+const {Navigator} = require("node-navigator");
 
-MongoClient.connect(
-  "mongodb+srv://bolehland:bolehland@cluster0.w5dfdjn.mongodb.net/?retryWrites=true&w=majority",
-  { useNewUrlParser: true },
-   (err, db) => {
-    if (err) throw err;
-    var dbo = db.db("CBS_UTEM").collection("bus");
-    const navigator = new Navigator();
-    let long, lat;
-    navigator.geolocation.getCurrentPosition((position) => {
-      lat = position.latitude;
-      long = position.longitude;
-    });
-    dbo.insertOne({ "testing": lat });
-  }
-).catch(err => {
-	console.error(err.stack)
-	process.exit(1)
-}).then(async client => {
-	console.log('Connected to MongoDB');
-	User.injectDB(client);
+let client;
+async function main(){
+    const uri = "mongodb+srv://bolehland:bolehland@cluster0.w5dfdjn.mongodb.net/?retryWrites=true&w=majority"
+    client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+}
+
+main().catch(console.error);
+var dbo = client.db("CBS_UTEM").collection("bus");
+const navigator = new Navigator();
+var long, lat;
+navigator.geolocation.getCurrentPosition((position) => {
+    lat = position.latitude;
+    console.log(lat);
+    long = position.longitude;
+    dbo.updateOne({"bus_plate":"UTeM 9012"},{$set: {'latitude':lat, 'longitude':long}});
 });
