@@ -5,14 +5,13 @@ const BUS = require("./bus");
 const BUS_STOP = require("./bus_stop");
 
 MongoClient.connect(
-	"mongodb+srv://bolehland:<password>@cluster0.w5dfdjn.mongodb.net/?retryWrites=true&w=majority",
+	"mongodb+srv://bolehland:bolehland@cluster0.w5dfdjn.mongodb.net/?retryWrites=true&w=majority",
 	{ useNewUrlParser: true },
 ).catch(err => {
 	console.error(err.stack)
 	process.exit(1)
 }).then(async client => {
 	console.log('Connected to MongoDB');
-	// USER&&COMMUTER&&BUS&&BUS_STOP.injectDB(client);
 	USER.injectDB(client);
 	COMMUTER.injectDB(client);
 	BUS.injectDB(client);
@@ -44,8 +43,8 @@ const options = {
 	},
 	apis: ['./main.js'],
 };
-const swaggerSpec = swaggerJsdoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// const swaggerSpec = swaggerJsdoc(options);
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.use(express.json())
@@ -53,110 +52,6 @@ app.use(express.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
 	res.send('Welcome To Connected Bus System API')
-})
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     user:
- *       properties:
- *         id:
- *           type: string
- *         username:
- *           type: string
- *         password:
- *           type: string
- *         role:
- *           type: string
- *     visitor:
- *       properties:
- *         name:
- *           type: string
- *         ic_no:
- *           type: string
- *         hp:
- *           type: string
- *     facilities:
- *        properties:
- *          facilityes_id:
- *           type: string
- *          name:
- *           type: string
- *          location:
- *           type: string
- *          operatin_hours:
- *           type: string
- *          max_number_visitors:
- *           type: int
- *          manager_id:
- *           type: string   
- *     booking_request:
- *        properties:
- *          facilities_id:
- *           type: string
- *          visitor_id:
- *           type: string
- *          time_slot:
- *           type: string
- *  
- * 
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- */
-
-/**
- * @swagger
- * /login:
- *   post:
- *     tags : ["Client"]
- *     description: User Login
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema: 
- *             type: object
- *             properties:
- *               username: 
- *                 type: string
- *               password: 
- *                 type: string
- *     responses:
- *       200:
- *         description: Login Successful!
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/user'
- *       401:
- *         description: Invalid username or password
- */
-
-app.post('/login', async (req, res) => {
-	console.log(req.body);
-
-	const user = await user.login(req.body.username, req.body.password);
-	if (user != null) {
-		console.log("Login Successful!");
-		res.status(200).json({
-			_id: user[0]._id,
-			username: user[0].username,
-			token: generateAccessToken({
-				_id: user[0]._id,
-				username: user[0].username,
-				role: user[0].role
-			}),
-			role: user[0].role
-		})
-	} else {
-		console.log("Login failed")
-		res.status(401).send("Invalid username or password");
-		return
-	}
 })
 
 
