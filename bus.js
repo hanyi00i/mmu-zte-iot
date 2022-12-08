@@ -4,6 +4,7 @@ let booking, bus;
 // readInfo
 // updateCommuterID&DepatureTime
 // updateRoute
+const {location} = require('./location.js');
 
 class Bus {
 	static async injectDB(conn) {
@@ -11,66 +12,21 @@ class Bus {
         bus = await conn.db("CBS_UTEM").collection("bus")
 	}
 
-
-    static async BookingandReservation(facilities_id, visitor_id, time_slot) {
-        let i,ii;
-		// TODO: Check if current booking is full
-        let result = await booking.find(
-            {facilities_id: facilities_id, time_slot: time_slot}).toArray();
-
-        let facilities = await faci.find(
-            {facilities_id: facilities_id}).toArray();
-
-            console.log("Number of bookings: "+result.length+"   Maximum Number of bookings: "+facilities[0].max_no_visitors);
-        if(result.length <= facilities[0].max_no_visitors){
-            i = true;
-            console.log("Booking is available");
-        } else {
-            i =  false;
-            console.log("Booking is full");
-        }
-
-        // TODO: Check if duplicate booking
-        let result2 = await booking.find(
-            {facilities_id: facilities_id, time_slot: time_slot, visitor_id: visitor_id}).toArray();
-        if(result2.length == 0){
-            ii =  true;
-            console.log("You may book this facility");
-        } else {
-            ii =  false;
-            console.log("You have already booked this facility");
-        }
-
-		// TODO: Save booking request to database
-        if(i && ii){
-            await booking.insertOne({
-                facilities_id: facilities_id,
-                visitor_id: visitor_id,
-                time_slot: time_slot
-            })
-        } else {
-            return false
-        };
-
-        return booking.find({
-            facilities_id: facilities_id,
-            visitor_id: visitor_id,
-            time_slot: time_slot
-        }).toArray()
-	}
-
-    static async queryBooking(facilities_id) {
-        // TODO: Query booking request
-        let result = await booking.find({facilities_id: facilities_id}).toArray();
-        if(result.length > 0){
-            console.log("Booking request found");
-            return result;
-        } else {
+    static async updateLocation(bs_id) {
+        // TODO: Update number of visitors
+        let document = await busstop.find({ "and": [{ "bs_id": bs_id }, { "temp_checkin_id": temp_checkin_id }] })
+        if (!document) {
             return null;
+        } else {
+            let output = await busstop.updateOne({ "bs_id": bs_id }, { $set: { "temp_checkin_id": temp_checkin_id } })
+            return true;
         }
     }
-}
 
+
+    static async 
+
+}
 
 
 module.exports = Bus;
