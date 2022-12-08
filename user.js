@@ -10,6 +10,7 @@ class User {
 		users = await conn.db("CBS_UTEM").collection("user")
 	}
 
+
 	static async register(username, password, role) {
 		// TODO: Check if username exists
 		let usersearch = await users.find({ username: username }).toArray()

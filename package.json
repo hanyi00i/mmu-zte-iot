@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "mongodb": "^4.12.1",
+    "node-navigator": "^1.0.1"
+  }
+}

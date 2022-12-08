@@ -34,6 +34,7 @@ class Bus {
             return "update success";
         }
     }
+
 }
 
 module.exports = Bus;
