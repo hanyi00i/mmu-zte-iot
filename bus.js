@@ -1,77 +1,40 @@
-let booking, bus;
-
-// # Function to use:
-// readInfo
-// updateCommuterID&DepatureTime
-// updateRoute
+let bus;
 
 class Bus {
 	static async injectDB(conn) {
-        //booking = await conn.db("CBS_UTEM").collection("bus")
         bus = await conn.db("CBS_UTEM").collection("bus")
 	}
 
-
-    static async BookingandReservation(facilities_id, visitor_id, time_slot) {
-        let i,ii;
-		// TODO: Check if current booking is full
-        let result = await booking.find(
-            {facilities_id: facilities_id, time_slot: time_slot}).toArray();
-
-        let facilities = await faci.find(
-            {facilities_id: facilities_id}).toArray();
-
-            console.log("Number of bookings: "+result.length+"   Maximum Number of bookings: "+facilities[0].max_no_visitors);
-        if(result.length <= facilities[0].max_no_visitors){
-            i = true;
-            console.log("Booking is available");
-        } else {
-            i =  false;
-            console.log("Booking is full");
-        }
-
-        // TODO: Check if duplicate booking
-        let result2 = await booking.find(
-            {facilities_id: facilities_id, time_slot: time_slot, visitor_id: visitor_id}).toArray();
-        if(result2.length == 0){
-            ii =  true;
-            console.log("You may book this facility");
-        } else {
-            ii =  false;
-            console.log("You have already booked this facility");
-        }
-
-		// TODO: Save booking request to database
-        if(i && ii){
-            await booking.insertOne({
-                facilities_id: facilities_id,
-                visitor_id: visitor_id,
-                time_slot: time_slot
-            })
-        } else {
-            return false
-        };
-
-        return booking.find({
-            facilities_id: facilities_id,
-            visitor_id: visitor_id,
-            time_slot: time_slot
-        }).toArray()
-	}
-
-    static async queryBooking(facilities_id) {
-        // TODO: Query booking request
-        let result = await booking.find({facilities_id: facilities_id}).toArray();
-        if(result.length > 0){
-            console.log("Booking request found");
-            return result;
-        } else {
+    // read from_bs_id to the to_bs_id (search bus available)
+    static async searchBus(from_bs_id, to_bs_id) {
+        let search = await bus.find({ "from_bs_id": from_bs_id, "to_bs_id": to_bs_id })
+        if (!search) {
             return null;
+        } else {
+            return search;
+        }
+    }
+
+    // update depature time (manually input by driver with matched bus_plate)
+    static async updateDepartureTime(bus_plate, departure_time) {
+        let document = await bus.find({ "bus_plate": bus_plate }, {$set : {"departure_time": departure_time} })
+        if (!document) {
+            return "update failed";
+        } else {
+            return "update success";
+        }
+    }
+
+    // update number of commuter
+    static async updateCommuterNum(bus_plate, commuter_num) {
+        let document = await bus.find({ "bus_plate": bus_plate }, {$set : {"number": commuter_num} })
+        if (!document) {
+            return "update failed";
+        } else {
+            return "update success";
         }
     }
 }
-
-
 
 module.exports = Bus;
 
