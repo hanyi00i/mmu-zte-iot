@@ -50,17 +50,17 @@ class BusStop {
         }
     }
 
-    // static async deleteFacility(facilities_id) {
-    //     let facilities = await faci.find({ facilities_id: facilities_id }).toArray();
-    //     if (facilities.length == 0) {
-    //         return false;
-    //     }
-    //     else {
-    //         let output = await faci.deleteOne({ facilities_id: facilities_id })
-    //         console.log[output, "deleted"]
-    //         return true;
-    //     }
-    // }
+    static async deleteFacility(facilities_id) {
+        let facilities = await faci.find({ facilities_id: facilities_id }).toArray();
+        if (facilities.length == 0) {
+            return false;
+        }
+        else {
+            let output = await faci.deleteOne({ facilities_id: facilities_id })
+            console.log[output, "deleted"]
+            return true;
+        }
+    }
 }
 
 module.exports = BusStop;
