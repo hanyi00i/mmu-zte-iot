@@ -19,7 +19,7 @@ class Bus {
     static async updateDepartureTime(bus_plate, departure_time) {
         let document = await bus.find({ "bus_plate": bus_plate }, {$set : {"departure_time": departure_time} })
         if (!document) {
-            return "update failed";
+            return null;
         } else {
             return "update success";
         }
@@ -29,7 +29,7 @@ class Bus {
     static async updateCommuterNum(bus_plate, commuter_num) {
         let document = await bus.find({ "bus_plate": bus_plate }, {$set : {"number": commuter_num} })
         if (!document) {
-            return "update failed";
+            return null;
         } else {
             return "update success";
         }
