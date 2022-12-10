@@ -35,6 +35,23 @@ class User {
 		// TODO: Return user object
 		return user;
 	}
+
+	static async history(username) {
+        let past = await users.findOne({ "username": username});
+        if (past) {
+            return users.aggregate([
+                {$lookup:{
+                    from:"commuter",
+                    localField:"username",
+                    foreignField:"username",
+                    as: "history"
+                }},
+				{$project:{ password: 0 }}
+            ]).toArray();
+        } else {
+            return null
+        }
+	}
 }
 
 module.exports = User;
