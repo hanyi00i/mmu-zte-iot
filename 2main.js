@@ -22,10 +22,10 @@ const express = require('express')
 const app = express()
 const port =  process.env.PORT || 3000
 
+// User.js
 app.post('/register', async (req, res) => {
-	console.log("Must See This");
-	console.log("Request Body : ", req.body);
-	const user = await USER.register(req.body.username, req.body.password);
+	console.log("Request Body : ", req.query);
+	const user = await USER.register(req.query.username, req.query.password);
 	if (user != null ) {
 		console.log("User Register Successfully");
 		res.status(200).json({
@@ -38,24 +38,24 @@ app.post('/register', async (req, res) => {
 	}
 })
 
-// app.post('/login',async (req, res) => {
-// 	console.log("Request Body : ", req.body);
-// 	const user = await USER.login(req.body.username, req.body.password);
-// 	if (user != null) {
-// 		console.log("What is send to test : " + user._id, user.username);
-// 		res.status(200).json({
-// 			_id: user._id,
-// 			username: user.username,
-// 			token: generateAccessToken({
-// 				_id: user._id,
-// 				username: user.username,
-// 			})
-// 		})
-// 	} else {
-// 		console.log("Wrong password or username");
-// 		res.status(401).json( {error : "Wrong password or username"} );
-// 	}
-// })
+app.post('/login',async (req, res) => {
+	console.log("Request Body : ", req.query);
+	const user = await USER.login(req.query.username, req.query.password);
+	if (user != null) {
+		console.log("Login Successfully")
+		res.status(200).json({
+			_id: user._id,
+			username: user.username,
+			token: generateAccessToken({
+				_id: user._id,
+				username: user.username,
+			})
+		})
+	} else {
+		console.log("Wrong password or username");
+		res.status(401).json( {error : "Wrong password or username"} );
+	}
+})
 
 app.get('/history', async (req, res) => {
 	console.log(req.query)
@@ -69,7 +69,58 @@ app.get('/history', async (req, res) => {
 	}
 })
 
+// Commuter.js
+app.get('/commuter', async (req, res) => {
+	console.log(req.query)
+	const user = await COMMUTER.getCommuter(req.query.username)
+	if (user != null ) {
+		console.log("Get Successfully with", user);
+		res.status(200).json(user)
+	} else {
+		console.log("No past history");
+		res.status(404).send("No past history");
+	}
+})
 
+app.post('/commuter/create', async (req, res) => {
+	console.log("Request Body : ", req.query);
+	const now = new Date();
+	const commuter = await COMMUTER.createCommuter(req.query.commuter_id, req.query.username, req.query.from_bs_id, now);
+	if (commuter != null ) {
+		console.log("Create Successfully");
+		res.status(200).json({
+			_id: commuter._id,
+			username: commuter.username,
+			from_bs_id: commuter.from_bs_id,
+			to_bs_id: commuter.to_bs_id,
+			from_time: commuter.from_time,
+			to_time: commuter.to_time
+		})
+	} else {
+		console.log("Conflict with Duplicate commuter ID");
+		res.status(409).json( {error : "Conflict with Duplicate commuter ID"} );
+	}
+})
+
+app.patch('/commuter/update', async (req, res) => {
+	console.log("Request Body : ", req.query);
+	const now = new Date();
+	const commuter = await COMMUTER.updateCommuter(req.query.commuter_id, req.query.to_bs_id, now);
+	if (commuter!= null ) {
+		console.log("Update Successfully");
+		console.log("What is updated : " + commuter.to_bs_id, commuter.to_time);
+		res.status(200).json({
+			_id: commuter._id,
+			from_bs_id: commuter.from_bs_id,
+			to_bs_id: commuter.to_bs_id,
+			from_time: commuter.from_time,
+			to_time: commuter.to_time
+		})
+	} else {
+		console.log("Commuter ID not found");
+		res.status(404).json( {error : "Commuter ID not found"} );
+	}
+})
 // Middleware Express for JWT
 // app.use(verifyToken);
 
@@ -92,7 +143,7 @@ function verifyToken(req, res, next) {
 
 	if (token == null) return res.sendStatus(401)
 
-	jwt.verify(token, "group10-secret-s2", (err, user) => {
+	jwt.verify(token, "bolehland", (err, user) => {
 		console.log(err)
 		if (err) return res.sendStatus(403)
 		req.user = user
