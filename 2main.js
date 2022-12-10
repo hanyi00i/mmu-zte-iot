@@ -23,9 +23,8 @@ const app = express()
 const port =  process.env.PORT || 3000
 
 app.post('/register', async (req, res) => {
-	console.log("Must See This");
-	console.log("Request Body : ", req.body);
-	const user = await USER.register(req.body.username, req.body.password);
+	console.log("Request Body : ", req.query);
+	const user = await USER.register(req.query.username, req.query.password);
 	if (user != null ) {
 		console.log("User Register Successfully");
 		res.status(200).json({
@@ -38,24 +37,24 @@ app.post('/register', async (req, res) => {
 	}
 })
 
-// app.post('/login',async (req, res) => {
-// 	console.log("Request Body : ", req.body);
-// 	const user = await USER.login(req.body.username, req.body.password);
-// 	if (user != null) {
-// 		console.log("What is send to test : " + user._id, user.username);
-// 		res.status(200).json({
-// 			_id: user._id,
-// 			username: user.username,
-// 			token: generateAccessToken({
-// 				_id: user._id,
-// 				username: user.username,
-// 			})
-// 		})
-// 	} else {
-// 		console.log("Wrong password or username");
-// 		res.status(401).json( {error : "Wrong password or username"} );
-// 	}
-// })
+app.post('/login',async (req, res) => {
+	console.log("Request Body : ", req.query);
+	const user = await USER.login(req.query.username, req.query.password);
+	if (user != null) {
+		console.log("Login Successfully")
+		res.status(200).json({
+			_id: user._id,
+			username: user.username,
+			token: generateAccessToken({
+				_id: user._id,
+				username: user.username,
+			})
+		})
+	} else {
+		console.log("Wrong password or username");
+		res.status(401).json( {error : "Wrong password or username"} );
+	}
+})
 
 app.get('/history', async (req, res) => {
 	console.log(req.query)
