@@ -6,8 +6,7 @@ class User {
 		users = await conn.db("CBS_UTEM").collection("user")
 	}
 
-
-	static async register(username, password, email, role) {
+	static async register(username, password) {
 		// TODO: Check if username exists
 	    let user = await users.findOne({ "username": username });
 		if (user) {
@@ -37,9 +36,10 @@ class User {
 	}
 
 	static async history(username) {
-        let past = await users.findOne({ "username": username});
-        if (past) {
+        let user = await users.findOne({ "username": username});
+        if (user) {
             return users.aggregate([
+				{$match: {username: username}},
                 {$lookup:{
                     from:"commuter",
                     localField:"username",
