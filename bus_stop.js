@@ -25,6 +25,7 @@ class BusStop {
             return output;
         }
     }
+    
 }
 
 module.exports = BusStop;
