@@ -44,6 +44,12 @@ const options = {
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
+// welcome
+app.get('/', function (req, res) {
+	res.send('Hello World from Bolehland !\nMMU ZTE IOT Competition');
+ })
+
+
 // user.js
 app.post('/register', async (req, res) => {
 	console.log("Request Body : ", req.query);
