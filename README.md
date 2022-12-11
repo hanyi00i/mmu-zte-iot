@@ -19,11 +19,3 @@ insert bs_id (with geolocation) and time (end)
 register user (hash)<br />
 login user (hash)<br />
 read past_travel_id (left join from commuter.js of the user_id) 
-
-{
-  from: "commuter",
-  localField: "username",
-  foreignField: "username",
-  as: "history"
-}
-
