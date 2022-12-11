@@ -235,10 +235,6 @@ app.patch('/update/waiting/', async(req, res) => {
 
 //***********************************************************************************************/
 
-app.listen(port, () => {
-	console.log(`Connected Bus System app is listening on port ${port}`)
-})
-
 // JSON Web Token
 const jwt = require('jsonwebtoken');
 const user = require("./user");
