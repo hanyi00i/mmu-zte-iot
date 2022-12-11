@@ -35,7 +35,7 @@ class BusStop {
         }
     }
 
-	
+    // fetch bus location (with matched bus_plate)
     static async fetchLocation(bs_id) {
         console.log("2. bs_id : " + bs_id)
         let search = await busstop.find({ "bs_id": bs_id }).toArray();
@@ -45,14 +45,11 @@ class BusStop {
             return null;
         } else {
             console.log("4. Search Success");
-            let result = await busstop.find({ "bs_id": bs_id }).project({bs_id: 1, longitude: 1, latitude: 1, _id: 0}).toArray();
-            return result[0];
+            return await busstop.find({ "bs_id": bs_id }).project({bs_id: 1, longitude: 1, latitude: 1, _id: 0}).toArray();
+
         }
     }
+
 }
-
-
-
-
 
 module.exports = BusStop;
