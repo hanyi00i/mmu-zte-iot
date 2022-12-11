@@ -230,11 +230,6 @@ app.patch('/update/waiting/', async(req, res) => {
 	}
 })
 
-app.listen(port, () => {
-	console.log(`CBS REST API listening on port ${port}`)
-})
-
-
 // Middleware Express for JWT
 // app.use(verifyToken);
 
