@@ -130,7 +130,6 @@ app.patch('/commuter/update', async (req, res) => {
 	const commuter = await COMMUTER.updateCommuter(req.query.commuter_id, req.query.to_bs_id, now);
 	if (commuter!= null ) {
 		console.log("Update Successfully");
-		console.log("What is updated : " + commuter.to_bs_id, commuter.to_time);
 		res.status(200).json({
 			_id: commuter._id,
 			from_bs_id: commuter.from_bs_id,
@@ -146,92 +145,91 @@ app.patch('/commuter/update', async (req, res) => {
 
 // bus.js
 app.get('/search/bus/', async (req, res) => {
-	console.log("1. Request Body : " + req.query.from_bs_id + " " + req.query.to_bs_id);
+	console.log("Request Body : " + req.query.from_bs_id + " " + req.query.to_bs_id);
 	let bus = await BUS.searchBus(req.query.from_bs_id, req.query.to_bs_id);
 	if (bus != null) {
-		console.log("5. Respon sent to frontend, check your browser");
+		console.log("Bus trip sent to frontend");
 		res.status(200).json(bus);
 	} else {
-		console.log("5. Bus trip not found")
+		console.log("Bus trip not found")
 		res.status(404).send("Bus trip not found");
 	}
 })
 
 app.get('/getlocation/', async (req, res) => {
-	console.log("1. Request Body : ",req.query);
+	console.log("Request Body : ",req.query);
 	if (req.query.bs_id) {
 		let busstop = await BUS_STOP.fetchLocation(req.query.bs_id);
 		if (busstop != null) {
-			console.log("5. Respon sent to frontend, check your browser");
+			console.log("Bus stop location found");
 			res.status(200).json(busstop);
 		} else {
-			console.log("5. Bus stop location not found")
+			console.log("Bus stop location not found")
 			res.status(404).send("Bus stop location not found");
 		}
 	} else if (req.query.bus_plate) {
 		let bus = await BUS.fetchLocation(req.query.bus_plate);
 		if (bus != null) {
-			console.log("5. Respon sent to frontend, check your browser");
+			console.log("Bus location found");
 			res.status(200).json(bus);
 		} else {
-			console.log("5. Bus trip not found")
-			res.status(404).send("Bus trip not found");
+			console.log("Bus location not found")
+			res.status(404).send("Bus location not found");
 		}
 	}	
 })
 
-app.patch('/update/DepartTime/', async (req, res) => {
-
-	console.log("1. Request Body : " + req.query.bus_plate, req.query.hour, req.query.minute);
+app.patch('/update/depart/', async (req, res) => {
+	console.log("Request Body : " + req.query.bus_plate, req.query.hour, req.query.minute);
 	let bus = await BUS.updateDepartureTime(req.query.bus_plate,req.query.hour,req.query.minute);
 	if (bus != null) {
-		console.log("5. Respon sent to frontend, check your browser");
+		console.log("Departure time updated");
 		res.status(200).json(bus);
 	} else {
-		console.log("5. Depature Time update failed")
+		console.log("Depature Time update failed")
 		res.status(404).send("Depature Time update failed");
 	}
 })
 
-app.patch('/update/bus-Commuter', async(req, res) => {
-	console.log("1. Request Body : " , req.query);
+app.patch('/update/commuter', async(req, res) => {
+	console.log("Request Body : " , req.query);
 	let bus = await BUS.updateCommuterNum(req.query.bus_plate, req.query.commuter_num);
 	if (bus != null) {
-		console.log("5. Commuter number of "+ req.query.bus_plate + " update to " + req.query.commuter_num);
+		console.log("Commuter number of "+ req.query.bus_plate + " update to " + req.query.commuter_num);
 		res.status(200).json(bus);
 	} else {
-		console.log("5. Commuter number update failed")
+		console.log("Commuter number update failed")
 		res.status(404).send("Commuter number update failed");
 	}
 })
 
 //bus_stop.js
 app.get('/search/bus-stop/', async(req, res) => {
-	console.log("1. Request Body : " , req.query);
+	console.log("Request Body : " , req.query);
 	let bs = await BUS_STOP.searchBusStop(req.query.area);
 	if (bs != null) {
-		console.log("5. Related bus stop found : " + bs);
+		console.log("Related bus stop found : " + bs);
 		res.status(200).json(bs);
 	} else {
-		console.log("5. Bus stop not found")
+		console.log("Bus stop not found")
 		res.status(404).send("Bus stop not found");
 	}
 })
 
 app.patch('/update/waiting/', async(req, res) => {
-	console.log("1. Request Body : " + req.query);
+	console.log("Request Body : " + req.query);
 	let bs = await BUS_STOP.updateWaiting(req.query.bs_id, req.query.waiting);
 	if (bs != null) {
-		console.log("5. User number of "+ req.query.bs_id + " update to " + req.query.waiting);
+		console.log("Number of people waiting at "+ req.query.bs_id + " update to " + req.query.waiting);
 		res.status(200).json(bs);
 	} else {
-		console.log("5. User number update failed")
-		res.status(404).send("User number update failed");
+		console.log("Bus stop ID not found")
+		res.status(404).send("Bus stop ID not found");
 	}
 })
 
 app.listen(port, () => {
-	console.log(`CBS REST API listening on port ${port}`)
+	console.log(`Connected Bus System app is listening on port ${port}`)
 })
 
 
