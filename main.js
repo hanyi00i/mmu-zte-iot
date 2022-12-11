@@ -231,19 +231,13 @@ app.patch('/update/waiting/', async(req, res) => {
 })
 
 app.listen(port, () => {
-	console.log(`CBS REST API listening on port ${port}`)
+	console.log(`Connected Bus System app is listening on port ${port}`)
 })
-
 
 // Middleware Express for JWT
 // app.use(verifyToken);
 
 //***********************************************************************************************/
-
-app.listen(port, () => {
-	console.log(`Connected Bus System app is listening on port ${port}`)
-})
-
 // JSON Web Token
 const jwt = require('jsonwebtoken');
 const user = require("./user");
