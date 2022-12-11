@@ -1,4 +1,4 @@
-const location = require("./geolocation");
+
 let bus;
 
 class Bus {
