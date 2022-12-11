@@ -34,21 +34,7 @@ class BusStop {
             return output;
         }
     }
-
-	
-    static async fetchLocation(bs_id) {
-        console.log("2. bs_id : " + bs_id)
-        let search = await busstop.find({ "bs_id": bs_id }).toArray();
-        console.log("3. " + search[0]);
-        if (!search[0]) {
-            console.log("4. Search Failed")
-            return null;
-        } else {
-            console.log("4. Search Success");
-            let result = await busstop.find({ "bs_id": bs_id }).project({bs_id: 1, longitude: 1, latitude: 1, _id: 0}).toArray();
-            return result[0];
-        }
-    }
+    
 }
 
 
