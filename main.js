@@ -21,6 +21,7 @@ MongoClient.connect(
 const express = require('express');
 const app = express()
 const port =  process.env.PORT || 3000
+const cors = require('cors');
 
 const options = {
 	definition: {
@@ -43,6 +44,7 @@ const options = {
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cors()) // Use this after the variable declaration
 
 // welcome
 app.get('/', function (req, res) {
