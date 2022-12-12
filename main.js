@@ -21,6 +21,7 @@ MongoClient.connect(
 const express = require('express');
 const app = express()
 const port =  process.env.PORT || 3000
+const cors = require('cors');
 
 const options = {
 	definition: {
@@ -43,12 +44,12 @@ const options = {
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cors()) // Use this after the variable declaration
 
 // welcome
 app.get('/', function (req, res) {
 	res.send('Hello World from Bolehland !\nMMU ZTE IOT Competition');
  })
-
 
 // user.js
 app.post('/register', async (req, res) => {
@@ -84,6 +85,9 @@ app.post('/login',async (req, res) => {
 		res.status(401).json( {error : "Wrong password or username"} );
 	}
 })
+
+// Middleware Express for JWT
+app.use(verifyToken);
 
 app.get('/history', async (req, res) => {
 	console.log(req.query)
@@ -237,10 +241,6 @@ app.patch('/update/waiting/', async(req, res) => {
 app.listen(port, () => {
 	console.log(`Connected Bus System app is listening on port ${port}`)
 })
-
-
-// Middleware Express for JWT
-// app.use(verifyToken);
 
 //***********************************************************************************************/
 
