@@ -11,7 +11,7 @@ class Bus {
         if (!search[0]) {
             return null;
         } else {
-            return search[0];
+            return search;
         }
     }
 
