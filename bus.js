@@ -15,6 +15,16 @@ class Bus {
         }
     }
 
+    // read all bus
+    static async searchALL() {
+        let search = await bus.find({ }).toArray();
+        if (search.length != 0) {
+            return search;
+        } else {
+            return null;
+        }
+    }
+
     // fetch bus location (with matched bus_plate)
     static async fetchLocation(bus_plate) {
         let search = await bus.find({ "bus_plate": bus_plate }).toArray();

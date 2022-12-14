@@ -19,9 +19,11 @@ MongoClient.connect(
 })
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express()
 const port =  process.env.PORT || 3000
 const cors = require('cors');
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const options = {
 	definition: {
@@ -87,10 +89,9 @@ app.post('/login',async (req, res) => {
 })
 
 // Middleware Express for JWT
-app.use(verifyToken);
+// app.use(verifyToken);
 
 app.get('/history', async (req, res) => {
-	console.log(req.query)
 	const user = await USER.history(req.query.username)
 	if (user != null ) {
 		console.log("Get Successfully with", user);
@@ -189,6 +190,18 @@ app.get('/getlocation/', async (req, res) => {
 	}	
 })
 
+app.get('/getAll', async (req, res) => {
+	console.log("Request Body : " + req.query);
+	let bus = await BUS.searchALL();
+	if (bus != null) {
+		console.log("Bus trip sent to frontend");
+		res.status(200).json(bus);
+	} else {
+		console.log("Bus trip not found")
+		res.status(404).send("Bus trip not found");
+	}
+})
+
 app.patch('/update/depart/', async (req, res) => {
 	console.log("Request Body : " + req.query.bus_plate, req.query.hour, req.query.minute);
 	let bus = await BUS.updateDepartureTime(req.query.bus_plate,req.query.hour,req.query.minute);
@@ -226,11 +239,24 @@ app.get('/search/bus-stop/', async(req, res) => {
 	}
 })
 
-app.patch('/update/waiting/', async(req, res) => {
-	console.log("Request Body : " + req.query);
-	let bs = await BUS_STOP.updateWaiting(req.query.bs_id, req.query.waiting);
+app.get('/search/allbs', async(req, res) => {
+	console.log("Request Body : " , req.query);
+	let bs = await BUS_STOP.searchAll();
 	if (bs != null) {
-		console.log("Number of people waiting at "+ req.query.bs_id + " update to " + req.query.waiting);
+		console.log("All bus stop found : " + bs);
+		res.status(200).json(bs);
+	} else {
+		console.log("Bus stop not found")
+		res.status(404).send("Bus stop not found");
+	}
+})
+
+app.patch('/update/waiting/', urlencodedParser, async(req, res) => {
+	console.log("Request Body : " + req.query);
+	console.log("Request Body 2 : " + req.body.image);
+	let bs = await BUS_STOP.updateWaiting(req.query.bs_id, req.query.waiting, req.body.image);
+	if (bs != null) {
+		console.log("Number of people waiting at "+ req.query.bs_id + " update to ");
 		res.status(200).json(bs);
 	} else {
 		console.log("Bus stop ID not found")
@@ -246,7 +272,6 @@ app.listen(port, () => {
 
 // JSON Web Token
 const jwt = require('jsonwebtoken');
-const user = require("./user");
 function generateAccessToken(payload) {
 	return jwt.sign(payload, "bolehland", { expiresIn: '1h' }); // expires in 1 hour
 }
