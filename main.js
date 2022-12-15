@@ -226,6 +226,18 @@ app.patch('/update/commuter', async(req, res) => {
 	}
 })
 
+app.patch('/bus-position', async(req, res) => {
+	const arr = [{ lat: 2.3128919, long: 102.3188263 }, { lat: 2.3125981, long: 102.3185756 }, { lat: 2.3122003, long: 102.3183267 }, { lat: 2.3117338, long: 102.3181333 }, { lat: 2.3111793, long: 102.3180451 }]
+	let bus = await BUS.getPosition(req.query.bus_plate, arr);
+	if (bus != null) {
+		console.log("Bus location updated");
+		res.status(200).json(bus);
+	} else {
+		console.log("Bus location update failed")
+		res.status(404).send("Bus location update failed");
+	}
+})
+
 //bus_stop.js
 app.get('/search/bus-stop/', async(req, res) => {
 	console.log("Request Body : " , req.query);

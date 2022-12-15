@@ -1,5 +1,9 @@
 let bus;
 
+const delay = (delayInms) => {
+    return new Promise(resolve => setTimeout(resolve, delayInms));
+  }
+
 class Bus {
 	static async injectDB(conn) {
         bus = await conn.db("CBS_UTEM").collection("bus")
@@ -61,6 +65,15 @@ class Bus {
         } else {
             return await bus.find({ "bus_plate": bus_plate}).project({bus_plate: 1, number: 1, _id: 0}).toArray();
         }
+	        
+    // get current position of bus
+    static async getPosition(bus_plate, arr) {
+        for (let i = 0; i < 5; i++) {
+            await bus.updateOne({ "bus_plate": bus_plate }, {$set : {"latitude": arr[i].lat, "longitude": arr[i].long }});
+            console.log(await bus.find({ "bus_plate": bus_plate }).project({bus_plate: 1, longitude: 1, latitude: 1, _id: 0}).toArray());
+            await delay(5000);
+        }
+        return true
     }
 }
 
