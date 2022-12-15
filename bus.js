@@ -11,7 +11,17 @@ class Bus {
         if (!search[0]) {
             return null;
         } else {
-            return search[0];
+            return search;
+        }
+    }
+
+    // read all bus
+    static async searchALL() {
+        let search = await bus.find({ }).toArray();
+        if (search.length != 0) {
+            return search;
+        } else {
+            return null;
         }
     }
 

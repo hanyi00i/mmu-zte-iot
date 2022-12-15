@@ -27,14 +27,12 @@ class Commuter {
 
     static async getCommuter(username) {
         let document = await commuters.find({ "username": username }).toArray();
-        //console.log(document);
 		if(document.length > 0){
             return document;
         } else {
             return null;
         }
 	}
-
 }
 
 module.exports = Commuter;
