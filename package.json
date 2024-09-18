@@ -3,7 +3,7 @@
     "bcrypt": "^5.1.0",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.0",
-    "mongodb": "^4.12.1",
+    "mongodb": "^4.17.0",
     "node-navigator": "^1.0.1"
   }
 }
